@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>artEditor</title>
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <!-- 强制让文档的宽度与设备的宽度保持1:1，并且文档最大的宽度比例是1.0，且不允许用户点击屏幕放大浏览 -->
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width, minimal-ui">
+    <!-- iphone设备中的safari私有meta标签，它表示：允许全屏模式浏览 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="stylesheet" href="css/style.css">
+    <style type="text/css">
+        .photo-wrapper {
+            position: absolute;
+            top: 60px;
+            right: 5px;
+            width: 35px;
+            height: 35px;
+            z-index: 1008;
+            border-radius: 100%;
+        }
+
+        .photo-wrapper .photo-btn {
+            display: inline-block;
+            width: 35px;
+            height: 35px;
+            background: url(./img/photo.png);
+            background-size: 35px 35px;
+            background-repeat: no-repeat;
+        }
+    </style>
+</head>
+<body>
+<div id="fadeBox" class="fadeBox">显示</div>
+<div style="width:100%;height:100%;margin: 0 auto;">
+    <div class="main-wrapper">
+        <div class="publish-article-title">
+            <input type="text" id="title" style="font-size: 14px;color: #909090" class="title-input"
+                   placeholder="文章标题(不超过36个字符)">
+            <div id="publish" style="color: black;font-size: 15px; float: right;margin-right: 5px">发布</div>
+        </div>
+        <div class="publish-article-content" style="width: 100%">
+            <input type="hidden" id="target">
+            <input type="hidden" id="targetText">
+            <div class="article-content" style="margin-top: 25px ;margin-left: 10px;margin-right: 10px" id="content">
+            </div>
+        </div>
+        <div class="photo-wrapper" id="container">
+            <span class="photo-btn" id="imageUpload"></span>
+        </div>
+        <!--<div class="footer-btn g-image-upload-box" id="container">-->
+        <!--<ul class="button-list">-->
+        <!--<li class="button-item">-->
+        <!--<span class="upload"><i class="upload-img"></i></span>-->
+        <!--<input class="input-file" id="imageUpload" type="button"-->
+        <!--style="position:absolute;left:0;opacity:0;width:50px;height: 50px;">-->
+        <!--</li>-->
+        <!--</ul>-->
+        <!--</div>-->
+    </div>
+
+</div>
+<div class="loading" id="loading">
+    <img src="./img/loading_more.gif"/>
+</div>
+<script src="js/jquery-1.11.2.js"></script>
+<!-- 七牛上传 -->
+<script type="text/javascript" src="js/qiniusdk/js/plupload.full.min.js"></script>
+<script type="text/javascript" src="js/qiniusdk/js/zh_CN.js"></script>
+<script type="text/javascript" src="js/qiniusdk/js/ui.js"></script>
+<script type="text/javascript" src="js/qiniusdk/js/qiniu.js"></script>
+<script type="text/javascript" src="js/qiniusdk/js/highlight.js"></script>
+<script src="js/index.js"></script>
+<script src="js/extend.js"></script>
+<script>
+    $(function () {
+        var body = {
+            title: '',
+            content: '',
+            type: '',
+            groupId: '',
+            topicId: '',
+            brief: '',
+            thumb: '',
+//            timeStamp:'',
+//            sign:''
+        }
+        //发布
+        $('#publish').click(function () {
+            
+//            var CryptoJS = require("crypto-js");
+//             alert(CryptoJS.HmacSHA1("chengyi", "zaiyi*13579"))
+
+            var content = $("#target").val();
+            var brief = $("#targetText").val();
+            brief = brief.substring(0, 200);
+            var title = $("#title").val();
+            var  isEmpty =  content.substring(0, 5);
+            if (title.length == 0) {
+                fadeBox('标题不能为空')
+                return;
+            }
+            if (content.length == 0) {
+
+                fadeBox('发布内容不能为空')
+                return;
+            }
+            if (isEmpty.indexOf('<div>')>= 0||isEmpty.indexOf('&')>= 0){
+                fadeBox('发布内容不能为空')
+                return;
+            }
+            //1head
+            var requestHead = {
+                token: getQueryString("token"),
+                platformMode: getQueryString("platformMode"),
+                imei: getQueryString("imei"),
+                channel: getQueryString("channel"),
+                accessId: getQueryString("accessId"),
+                versionCode: '00200',
+            };
+            //1:标题body
+                    body.title = title,
+                    body.content = content,
+                    body.type = getQueryString("type"),
+                    body.groupId = getQueryString("groupId"),
+                    body.topicId = getQueryString("topicId"),
+                    body.brief = brief,
+                    body.thumb = getThumImg(content);
+//                    body.sign = getQueryString("sign"),
+//                    body.timeStamp = getQueryString("timeStamp"),
+
+//            alert('requestHead'+JSON.stringify(requestHead))
+//            alert('body'+JSON.stringify(body))
+            //发送请求
+            $.ajax({
+                headers: {'Head': JSON.stringify(requestHead)},
+                type: 'POST',
+                url: 'http://api.zaiyi.chengyiwm.com/social/article/publish',
+//                http://123.57.31.218/social/article/publish
+//                http://api.zaiyi.chengyiwm.com/social/article/publish
+                data: body,
+                dataType: 'JSON',
+                success: function (res) {//发布成功进行相应的跳转
+//                   alert('res'+JSON.stringify(res))
+                    var topicId = getQueryString("topicId")
+                    var groupId = getQueryString("groupId")
+                    //发布来源
+                    if (res.head.code == 0) {//发布成功跳转到相应的界面
+                        window.location.href = " zaiyi://back";
+                    } else if (res.head.code == -10015||res.head.code == -10016) {
+                        fadeBox(res.head.msg)
+                        window.location.href = "zaiyi://login"
+                    }else {
+                        fadeBox(res.head.msg)
+                    }
+                },
+                error: function (error) {
+                    fadeBox(JSON.stringify(error))
+//                    alert('res'+JSON.stringify(error))
+                }
+
+            });
+        })
+
+//获取浏览器中的值
+        function getQueryString(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return unescape(r[2]);
+            return null;
+        }
+
+        function getThumImg(htmlContent) {
+            var imgReg = /<img.*?(?:>|\/>)/gi;
+            var srcReg = /src=[\'\"]?([^\'\"]*)[\'\"]?/i;
+            var arr = htmlContent.match(imgReg);
+            var thumb = "";
+            if (arr && arr.length > 0) {
+                var src = arr[0].match(srcReg);
+                if (src[1]) {
+                    thumb = src[1];
+                    //console.log(thumb);
+                }
+            }
+            return thumb;
+        }
+
+        function fadeBox(text) {
+            $("#fadeBox").text(text);
+            $('#fadeBox').fadeIn("slow");
+            var t = setTimeout("$('#fadeBox').fadeOut('slow')", 1000);
+        }
+
+
+    });
+</script>
+</body>
+</html>
