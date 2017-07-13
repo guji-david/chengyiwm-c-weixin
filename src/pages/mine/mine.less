@@ -1,0 +1,181 @@
+
+.mine {
+  width: 100%;
+  height: 100%;
+  background-color: #f6f6f6;
+  .content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    .head-bc {
+      background: url(../../assets/images/mine_head_bc.png);
+      background-size: 100% 100%;
+      -moz-background-size: 100% 100%; /* 老版本的 Firefox */
+      width: 100%;
+      height: 220px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      .login-btn {
+        width: 94px;
+        height: 34px;
+        color: white;
+        font-size: 14px;
+        border-radius: 5px;
+        border: 1px solid #d2a056;
+        color: #d2a056;
+        margin-bottom: 83px;
+      }
+      .login-content {
+        width: 100%;
+        .login-top {
+        width: 100%;
+          max-height: ~'calc(100% - 60px)';
+          height: 90px;
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+         margin-top: 20px;
+          .login-top-left{
+            width: 30%;
+          }
+          .login-top-ava{
+            width: 40%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            .login-top-img{
+              width: 50px;
+              height: 50px;
+              border-radius: 25px;
+              overflow: hidden;
+              background-color: #F6F6F6;
+            }
+            .login-top-text{
+              font-size: 14px;
+              color: #FFFFFF;
+              margin-top: 8px;
+            }
+          }
+          .login-top-right {
+            width: 30%;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+            margin-top: 5px;
+            .per-center {
+              width:68px;
+              height: 24px;
+              background-color: #d2a056;
+              -webkit-border-radius: 21px 0 0 21px;
+              -moz-border-radius: 21px 0 0 21px;
+              border-radius: 21px 0 0 21px;
+              display: flex;
+              flex-direction: row;
+              justify-content: space-around;
+              align-items: center;
+
+            }
+          }
+        }
+        .slogan-text{
+          font-size: 14px;
+          width: 100%;
+          color: #FFFFFF;
+           height: 20px;
+          align-self: center;
+          text-align: center;
+
+        }
+        .login-bottom {
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+          margin-top: 20px;
+          .login-bottom-left{
+            width: 120px;
+            height: 60px;
+            color: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            .follow-num{
+              font-size: 20px;
+            }
+            .follow-title{
+              font-size: 12px;
+            }
+          }
+          .login-bottom-right{
+            width: 120px;
+            height: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            color: #FFFFFF;
+            .Fans-num{
+              font-size: 20px;
+
+            }
+            .Fans-title{
+              font-size: 12px;
+
+            }
+
+          }
+
+        }
+      }
+    }
+    .head-bottom {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      .cell {
+        //max-width: ~'calc(100% - 10px)';
+        width: 100%;
+        background-color: white;
+        .cell-bc {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+          margin-left: 10px;
+          height: 45px;
+          border-bottom: 1px solid #eeeeee;
+          .cell-left{
+            width: 80%;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+          .cell-img {
+            width: 18px;
+            height: 18px;
+          }
+          .cell-text {
+            margin-left: 8px;
+            font-size: 13px;
+            color: #131313;
+           }
+          }
+          .right-text{
+            background-color: red;
+            font-size: 13px;
+            margin-right: 10px;
+            height: 12px;
+            width: 12px;
+            border-radius: 6px;
+            text-align: center;
+          }
+        }
+      }
+    }
+  }
+}
